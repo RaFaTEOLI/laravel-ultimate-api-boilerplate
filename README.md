@@ -1,4 +1,4 @@
-# rafateoli/backend
+# Laravel Ultimate API Boilerplate
 
 <!-- Initializer for Laravel Todos START  -->
 ## TODO
