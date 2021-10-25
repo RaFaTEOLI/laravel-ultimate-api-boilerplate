@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+echo "🚀 Running $1..."
+
+docker run --rm \
+    -v "$(pwd)":/opt \
+    -w /opt \
+    laravelsail/php80-composer:latest \
+    bash -c "$1";

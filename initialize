@@ -1,0 +1,130 @@
+#!/usr/bin/env bash
+set -e;
+
+if ! docker info > /dev/null 2>&1; then
+    echo -e "Docker is not running." >&2;
+    exit 1;
+fi
+
+echo '';
+echo '┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━';
+echo '┃ 🚀 [1mInitializer for Laravel[0m';
+echo '┃ ';
+echo '┃ This script will complete the rest of the setup needed to install the';
+echo '┃ chosen components into your fresh application. This might require';
+echo '┃ downloading Docker containers or requiring packages via composer';
+echo '┃ multiple times, so it can take a while to complete.';
+echo '┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━';
+if [ -t 1 ];
+then
+    echo '';
+    read -n 1 -s -r -p "Press any key to continue";
+    echo '';
+else
+    echo '';
+fi
+
+echo '';
+echo '┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━';
+echo '┃ 🚀 [1mInstall dependencies and set up Laravel Sail[0m';
+
+echo '┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━';echo '';
+echo 'docker run --rm \
+    -v "$(pwd)":/opt \
+    -w /opt \
+    laravelsail/php80-composer:latest \
+    bash -c "composer install --ignore-platform-reqs && php -r \"file_exists('\''.env'\'') || copy('\''.env.example'\'', '\''.env'\'');\" && php artisan key:generate --ansi && php artisan sail:install --with=mysql,redis,meilisearch,mailhog"'
+docker run --rm \
+    -v "$(pwd)":/opt \
+    -w /opt \
+    laravelsail/php80-composer:latest \
+    bash -c "composer install --ignore-platform-reqs && php -r \"file_exists('.env') || copy('.env.example', '.env');\" && php artisan key:generate --ansi && php artisan sail:install --with=mysql,redis,meilisearch,mailhog";
+
+echo '';
+echo '┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━';
+echo '┃ 🚀 [1mAdjust Permissions[0m';
+
+echo '┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━';echo '';
+echo '    if sudo -n true 2>/dev/null; then
+        sudo chown -R $USER: .
+    else
+        echo -e "Please provide your password so we can make some final adjustments to your application\'\''s permissions."
+        echo ""
+        sudo chown -R $USER: .
+    fi'
+    if sudo -n true 2>/dev/null; then
+        sudo chown -R $USER: .
+    else
+        echo -e "Please provide your password so we can make some final adjustments to your application\'s permissions."
+        echo ""
+        sudo chown -R $USER: .
+    fi;
+
+echo '';
+echo '┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━';
+echo '┃ 🚀 [1mStart Laravel Sail[0m';
+
+echo '┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━';echo '';
+echo './vendor/bin/sail up -d'
+./vendor/bin/sail up -d;
+
+echo '';
+echo '┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━';
+echo '┃ 🚀 [1mInstall Laravel Jetstream[0m';
+
+echo '┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━';echo '';
+echo './vendor/bin/sail artisan jetstream:install inertia'
+./vendor/bin/sail artisan jetstream:install inertia;
+
+echo '';
+echo '┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━';
+echo '┃ 🚀 [1mSetup Laravel Scout[0m';
+
+echo '┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━';echo '';
+echo './vendor/bin/sail artisan --no-interaction vendor:publish --provider="Laravel\Scout\ScoutServiceProvider"'
+./vendor/bin/sail artisan --no-interaction vendor:publish --provider="Laravel\Scout\ScoutServiceProvider";
+
+echo '';
+echo '┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━';
+echo '┃ 🚀 [1mAdd Billable Trait to User model[0m';
+
+echo '┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━';echo '';
+echo 'perl -0777 -pi -e '\''s/(class User.*{)/$1\n    use \\Laravel\\Cashier\\Billable;/gms'\'' app/Models/User.php'
+perl -0777 -pi -e 's/(class User.*{)/$1\n    use \\Laravel\\Cashier\\Billable;/gms' app/Models/User.php;
+
+echo '';
+echo '┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━';
+echo '┃ 🚀 [1mMigrate the database[0m';
+
+echo '┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━';echo '';
+echo './vendor/bin/sail artisan migrate'
+./vendor/bin/sail artisan migrate;
+
+echo '';
+echo '┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━';
+echo '┃ 🚀 [1mSetup frontend[0m';
+
+echo '┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━';echo '';
+echo './vendor/bin/sail npm install'
+./vendor/bin/sail npm install;
+echo './vendor/bin/sail npm run dev'
+./vendor/bin/sail npm run dev;
+
+echo "Finished setup, removing initialize and TODOs in README.md!";
+rm "./initialize";
+
+# Remove TODO in readme
+perl -0777 -pi -e 's/<!-- Initializer for Laravel Todos START  -->.*<!-- Initializer for Laravel Todos END  -->//gs' README.md
+
+echo '';
+echo '┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━';
+echo '┃ 🚀 [1mDone![0m';
+echo '┃ ';
+echo '┃ You can now have a look at README.md, for further instructions, guides';
+echo '┃ and links to the installed components.';
+echo '┃ ';
+echo '┃ Some helpful links:';
+echo '┃ - Your Application http://localhost';
+echo '┃ - Preview Emails via Mailhog http://localhost:8025';
+echo '┃ - MeiliSearch Administration Panel http://localhost:7700';
+echo '┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━';echo '';
