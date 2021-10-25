@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Services\User;
+
 use App\Repositories\User\UserRepository;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
@@ -8,8 +9,6 @@ use Exception;
 
 class CreateUserService
 {
-    private $userRepository;
-
     public function __construct()
     {
         $this->userRepository = new UserRepository();

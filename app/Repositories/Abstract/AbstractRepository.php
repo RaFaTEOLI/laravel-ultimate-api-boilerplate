@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Repositories\Abstract;
+namespace App\Repositories\_Abstract;
 
-use App\Repositories\Abstract\AbstractRepositoryInterface;
+use App\Repositories\_Abstract\AbstractRepositoryInterface;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Collection;
 
 abstract class AbstractRepository implements AbstractRepositoryInterface
 {
@@ -21,10 +20,9 @@ abstract class AbstractRepository implements AbstractRepositoryInterface
         return app($this->model);
     }
 
-    public function all(int $limit = 0, int $offset = 0): Collection | array
+    public function all(int $limit = 0, int $offset = 0): array
     {
         try {
-            // return $this->model->all();
             return $this->model->when($limit, function ($query, $limit) {
                 return $query->limit($limit);
             })

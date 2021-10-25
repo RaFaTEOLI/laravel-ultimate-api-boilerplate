@@ -48,6 +48,8 @@ class AuthController extends Controller
         try {
             $user = (new SignUpUserService())->execute($request->only(['name', 'email', 'password']));
 
+            $user->sendEmailVerificationNotification();
+
             return $this->success([
                 'user' => $user,
                 'token' => $user->createToken('API Token')->plainTextToken

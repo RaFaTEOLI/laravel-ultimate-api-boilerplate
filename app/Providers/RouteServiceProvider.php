@@ -46,6 +46,8 @@ class RouteServiceProvider extends ServiceProvider
             $this->loadApiRoute("user");
             $this->loadApiRoute("role");
             $this->loadApiRoute("permission");
+            $this->loadApiRoute("verify");
+            $this->loadApiRoute("reset");
 
             Route::middleware('web')
                 ->namespace($this->namespace)

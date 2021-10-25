@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\APIController;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\VerifyEmailController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -28,14 +27,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::post('/auth/logout', [AuthController::class, 'logout']);
 });
-
-Route::get('/email/verify/{id}/{hash}', [VerifyEmailController::class, '__invoke'])
-    ->middleware(['signed', 'throttle:6,1'])
-    ->name('verification.verify');
-
-Route::post('/email/verify/resend', [VerifyEmailController::class, 'resend'])
-    ->middleware(['auth:sanctum', 'throttle:6,1'])
-    ->name('verification.send');
 
 Route::get("/health", [APIController::class, 'health']);
 Route::get("/version", [APIController::class, 'version']);
