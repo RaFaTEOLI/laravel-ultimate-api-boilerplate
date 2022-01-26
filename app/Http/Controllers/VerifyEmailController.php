@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Auth\Events\Verified;
-use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use App\Models\User;
@@ -44,19 +44,19 @@ class VerifyEmailController extends Controller
      *    ),
      * )
      */
-    public function __invoke(Request $request): RedirectResponse
+    public function __invoke(Request $request): Response
     {
         $user = User::find($request->route('id'));
 
         if ($user->hasVerifiedEmail()) {
-            return redirect(env('FRONT_URL') . '/email/verify/success');
+            return $this->noContent();
         }
 
         if ($user->markEmailAsVerified()) {
             event(new Verified($user));
         }
 
-        return redirect(env('FRONT_URL') . '/email/verify/success');
+        return $this->noContent();
     }
 
     /**
@@ -78,6 +78,6 @@ class VerifyEmailController extends Controller
     public function resend(Request $request)
     {
         $request->user()->sendEmailVerificationNotification();
-        return $this->success(['message' => 'Verification link sent!'], 200);
+        return $this->success(['message' => __('actions.emailVerificationSent')], 200);
     }
 }

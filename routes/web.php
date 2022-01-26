@@ -24,10 +24,6 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/email/verify/success', function () {
-    return Inertia::render('Auth/EmailVerified');
-});
-
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->name('dashboard');

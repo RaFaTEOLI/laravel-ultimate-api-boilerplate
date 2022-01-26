@@ -2,17 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\HttpStatus;
 use App\Http\Requests\Role\RoleRequest;
 use App\Repositories\PermissionRepository\PermissionRepository;
 use Illuminate\Http\Request;
 use App\Repositories\RolesRepository\RolesRepository;
 use App\Services\Role\CreateRoleService;
 use App\Traits\ApiResponser;
+use App\Traits\Pagination;
 use Exception;
 
 class RolesController extends Controller
 {
     use ApiResponser;
+    use Pagination;
     private $rolesRepository;
 
     public function __construct()
@@ -58,9 +61,10 @@ class RolesController extends Controller
      *  ),
      * )
      */
-    public function index()
+    public function index(Request $request)
     {
-        $roles = $this->rolesRepository->all();
+        $paginated = $this->paginate($request);
+        $roles = $this->rolesRepository->all($paginated["limit"], $paginated["offset"]);
 
         return $this->success($roles, HttpStatus::SUCCESS);
     }

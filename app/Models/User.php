@@ -26,7 +26,7 @@ use Shanmuga\LaravelEntrust\Traits\LaravelEntrustUserTrait;
  * Class User
  *
  */
-class User extends Authenticatable implements MustVerifyEmail
+class User extends Authenticatable
 {
     use \Laravel\Cashier\Billable;
     use HasApiTokens;
@@ -83,7 +83,8 @@ class User extends Authenticatable implements MustVerifyEmail
             "id" => $this->id,
             "name" => $this->name,
             "email" => $this->email,
-            "photo" => $this->photo,
+            "email_verified_at" => $this->email_verified_at,
+            "profile_photo_url" => $this->profile_photo_url,
             "created_at" => $this->created_at,
             "updated_at" => $this->updated_at,
             "roles" => $this->roles()

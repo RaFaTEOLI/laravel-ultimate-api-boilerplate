@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Http\HttpStatus;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Verified;
@@ -49,11 +50,10 @@ class EmailVerificationTest extends TestCase
         );
 
         $response = $this->actingAs($user)->get($verificationUrl);
-
         Event::assertDispatched(Verified::class);
 
         $this->assertTrue($user->fresh()->hasVerifiedEmail());
-        $response->assertRedirect(env('APP_URL') . '/email/verify/success');
+        $response->assertStatus(HttpStatus::NO_CONTENT);
     }
 
     public function test_email_can_not_verified_with_invalid_hash()
@@ -74,6 +74,6 @@ class EmailVerificationTest extends TestCase
 
         $this->actingAs($user)->get($verificationUrl);
 
-        $this->assertFalse(!!$user->email_verified_at);
+        $this->assertFalse($user->hasVerifiedEmail());
     }
 }

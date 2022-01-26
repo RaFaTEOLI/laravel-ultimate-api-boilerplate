@@ -2,16 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\HttpStatus;
 use App\Http\Requests\Permission\PermissionRequest;
 use App\Repositories\PermissionRepository\PermissionRepository;
 use App\Services\Permission\CreatePermissionService;
 use App\Traits\ApiResponser;
+use App\Traits\Pagination;
 use Illuminate\Http\Request;
 use Exception;
 
 class PermissionController extends Controller
 {
     use ApiResponser;
+    use Pagination;
     private $permissionRepository;
 
     public function __construct()
@@ -57,9 +60,10 @@ class PermissionController extends Controller
      *  ),
      * )
      */
-    public function index()
+    public function index(Request $request)
     {
-        $permissions = $this->permissionRepository->all();
+        $paginated = $this->paginate($request);
+        $permissions = $this->permissionRepository->all($paginated["limit"], $paginated["offset"]);
 
         return $this->success($permissions, HttpStatus::SUCCESS);
     }
@@ -206,7 +210,7 @@ class PermissionController extends Controller
      *  ),
      * )
      */
-    public function destroy($id, Request $request)
+    public function destroy($id)
     {
         try {
             $this->permissionRepository->delete($id);

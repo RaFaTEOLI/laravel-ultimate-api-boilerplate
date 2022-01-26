@@ -2,6 +2,9 @@
 
 namespace App\Traits;
 
+use App\Http\HttpStatus;
+use Illuminate\Support\Facades\Auth;
+
 /*
 |--------------------------------------------------------------------------
 | Api Responser Trait
@@ -23,7 +26,20 @@ trait ApiResponser
      */
     protected function success($data, int $code = 200)
     {
+        if (is_string($data)) {
+            return response()->json(["status" => "success", "message" => $data], $code);
+        }
         return response()->json($data, $code);
+    }
+
+    /**
+     * Return the user JSON response.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected function user()
+    {
+        return response()->json(Auth::user()->format(), HttpStatus::SUCCESS);
     }
 
     /**

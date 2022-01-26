@@ -5,7 +5,9 @@ return [
         'admin' => [
             'users' => 'c,r,u,d',
             'admin' => 'c,r,u,d',
-            'profile' => 'r,d'
+            'profile' => 'r,d',
+            'permissions' => 'c,r,u,d',
+            'roles' => 'c,r,u,d',
         ],
         'customer' => [
             'profile' => 'r,u'

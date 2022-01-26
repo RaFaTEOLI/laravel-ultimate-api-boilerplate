@@ -51,7 +51,7 @@ class AuthController extends Controller
             $user->sendEmailVerificationNotification();
 
             return $this->success([
-                'user' => $user,
+                'user' => $user->format(),
                 'token' => $user->createToken('API Token')->plainTextToken
             ]);
         } catch (Exception $e) {
@@ -101,7 +101,7 @@ class AuthController extends Controller
             (new SignInUserService())->execute($request->only(['email', 'password']));
 
             return $this->success([
-                'user' => auth()->user(),
+                'user' => auth()->user()->format(),
                 'token' => auth()->user()->createToken('API Token')->plainTextToken
             ]);
         } catch (UserWrongCredentials $e) {
@@ -132,7 +132,7 @@ class AuthController extends Controller
         auth()->user()->tokens()->delete();
 
         return [
-            'message' => 'Tokens Revoked'
+            'message' => __('generic.tokensRevoked')
         ];
     }
 }

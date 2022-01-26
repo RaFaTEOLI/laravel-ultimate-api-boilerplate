@@ -4,6 +4,7 @@ namespace App\Repositories\PermissionRepository;
 
 use App\Models\Permission;
 use App\Repositories\RolesRepository\RolesRepository;
+use Illuminate\Support\Collection;
 
 class PermissionRepository implements PermissionRepositoryInterface
 {
@@ -12,9 +13,14 @@ class PermissionRepository implements PermissionRepositoryInterface
      *
      * @return Permission
      */
-    public function all()
+    public function all(int $limit = 0, int $offset = 0): Collection
     {
-        return Permission::all();
+        return Permission::when($limit, function ($query, $limit) {
+            return $query->limit($limit);
+        })
+            ->when($offset && $limit, function ($query, $offset) {
+                return $query->offset($offset);
+            })->get()->map->format();
     }
 
     /**

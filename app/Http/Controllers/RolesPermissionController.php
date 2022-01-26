@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\HttpStatus;
 use Exception;
 use App\Services\RolePermission\UpdateRolePermissionService;
 use App\Services\RolePermission\RemoveRolePermissionService;
@@ -18,7 +19,7 @@ class RolesPermissionController extends Controller
         try {
             $validator = Validator::make(
                 ["role_id" => $roleId, "permission_id" => $permissionId],
-                RolePermissionRequest::rules($roleId),
+                RolePermissionRequest::rules($roleId)
             );
 
             if ($validator->fails()) {
@@ -41,7 +42,7 @@ class RolesPermissionController extends Controller
         try {
             $validator = Validator::make(
                 ["role_id" => $roleId, "permission_id" => $permissionId],
-                RolePermissionRequest::deleteRules(),
+                RolePermissionRequest::deleteRules()
             );
 
             if ($validator->fails()) {

@@ -7,17 +7,30 @@ use App\Models\User;
 use App\Models\Role;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Collection;
 
 class UserRepository implements UserRepositoryInterface
 {
     /*
         Get All Active Users
     */
-    public function all()
+    public function all(int $limit = 0, int $offset = 0): Collection
     {
-        return User::where("deleted_at", null)
-            ->get()
-            ->map->format();
+        try {
+            $users = User::where("deleted_at", null)
+                ->when($limit, function ($query, $limit) {
+                    return $query->limit($limit);
+                })
+                ->when($offset && $limit, function ($query, $offset) {
+                    return $query->offset($offset);
+                })
+                ->get()
+                ->map->format();
+
+            return $users;
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage(), 500);
+        }
     }
 
     /*

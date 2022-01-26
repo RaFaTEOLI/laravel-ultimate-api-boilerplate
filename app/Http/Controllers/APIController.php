@@ -78,6 +78,6 @@ class APIController extends Controller
      */
     public function health()
     {
-        return response()->json(["message" => "It's working"], 200);
+        return response()->json(["message" => __('generic.working')], 200);
     }
 }

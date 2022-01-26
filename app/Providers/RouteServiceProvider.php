@@ -18,6 +18,7 @@ class RouteServiceProvider extends ServiceProvider
      * @var string
      */
     public const HOME = '/dashboard';
+    public const EMAIl_VERIFY = '/email/verify';
 
     /**
      * The controller namespace for the application.

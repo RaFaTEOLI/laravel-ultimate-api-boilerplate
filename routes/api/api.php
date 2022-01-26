@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\APIController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\LocalizationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -22,7 +23,7 @@ Route::post('/auth/login', [AuthController::class, 'login']);
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/me', function (Request $request) {
-        return auth()->user();
+        return auth()->user()->format();
     });
 
     Route::post('/auth/logout', [AuthController::class, 'logout']);
@@ -31,6 +32,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 Route::get("/health", [APIController::class, 'health']);
 Route::get("/version", [APIController::class, 'version']);
 Route::get("/metrics", [APIController::class, 'metrics']);
+
+Route::get("/lang/{locale}", [LocalizationController::class, 'index']);
 
 Route::fallback(function () {
     return response()->json(["error" => "Page Not Found"], 404);

@@ -23,10 +23,7 @@ class UsersRoleController extends Controller
             );
 
             if ($validator->fails()) {
-                return $this->error($request, __("actions.error"), $e->getCode());
-                return redirect()
-                    ->back()
-                    ->withErrors($validator->errors());
+                return $this->error(__('actions.error'), 422, $validator->errors());
             }
 
             $updateUserRoleService = new UpdateUserRoleService();
@@ -34,7 +31,7 @@ class UsersRoleController extends Controller
 
             return $this->success(["id" => $userId], HttpStatus::CREATED);
         } catch (Exception $e) {
-            return $this->error(__("actions.error"), $e->getCode());
+            return $this->error($e->getMessage(), $e->getCode());
         }
     }
 
@@ -54,7 +51,7 @@ class UsersRoleController extends Controller
 
             return $this->success(["id" => $userId], HttpStatus::SUCCESS);
         } catch (Exception $e) {
-            return $this->error(__("actions.error"), $e->getCode());
+            return $this->error($e->getMessage(), $e->getCode());
         }
     }
 }

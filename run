@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-
+# Description: Script to receive a command to run
+# Example: ./run "composer -v"
 echo "🚀 Running $1..."
 
 docker run --rm \

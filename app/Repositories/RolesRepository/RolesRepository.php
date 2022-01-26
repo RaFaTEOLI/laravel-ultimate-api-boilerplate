@@ -5,7 +5,8 @@ namespace App\Repositories\RolesRepository;
 use App\Models\Role;
 use App\Models\User;
 use App\Repositories\RolesRepository\RolesRepositoryInterface;
-use App\Repositories\User\UserRepository;
+use App\Repositories\UserRepository\UserRepository;
+use Illuminate\Support\Collection;
 
 class RolesRepository implements RolesRepositoryInterface
 {
@@ -14,9 +15,14 @@ class RolesRepository implements RolesRepositoryInterface
      *
      * @return Role
      */
-    public function all()
+    public function all(int $limit = 0, int $offset = 0): Collection
     {
-        return Role::all()->map->format();
+        return Role::when($limit, function ($query, $limit) {
+            return $query->limit($limit);
+        })
+            ->when($offset && $limit, function ($query, $offset) {
+                return $query->offset($offset);
+            })->get()->map->format();
     }
 
     /**
@@ -82,7 +88,7 @@ class RolesRepository implements RolesRepositoryInterface
      */
     public function delete($id)
     {
-        $obj = Role::where("id", $id)->delete();
+        Role::where("id", $id)->delete();
 
         return true;
     }

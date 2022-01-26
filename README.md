@@ -1,6 +1,7 @@
-# Laravel Ultimate API Boilerplate
+# rafateoli/backend
 
 <!-- Initializer for Laravel Todos START  -->
+
 ## TODO
 
 This project was generated using
@@ -12,6 +13,7 @@ the project setup run the following in your terminal:
 ```
 
 <!-- Initializer for Laravel Todos END  -->
+
 ## Local Development
 
 This project uses
@@ -21,9 +23,11 @@ the [official documentation](https://laravel.com/docs/sail).
 
 ### Links
 
-- **Your Application** http://localhost
-- **Preview Emails via Mailhog** http://localhost:8025
-- **MeiliSearch Administration Panel** http://localhost:7700
+-   **Your Application** http://localhost
+-   **Preview Emails via Mailhog** http://localhost:8025
+-   **MeiliSearch Administration Panel** http://localhost:7700
+-   **API Endpoints** http://localhost/api
+-   **API Documentation** http://localhost/api/documentation
 
 ### Start the development server
 

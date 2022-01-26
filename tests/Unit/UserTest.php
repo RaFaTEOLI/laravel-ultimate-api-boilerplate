@@ -10,6 +10,7 @@ use Tests\TestCase;
 use App\Models\User;
 use App\Models\Role;
 use App\Services\User\RemoveUserRoleService;
+use App\Services\User\UpdateProfilePhotoService;
 use App\Services\User\UpdateUserRoleService;
 use Exception;
 

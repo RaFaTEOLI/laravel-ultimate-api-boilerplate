@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Actions\Fortify\PasswordValidationRules;
 use App\Http\Requests\User\ResetPasswordRequest;
+use App\Repositories\UserRepository\UserRepository;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use App\Traits\ApiResponser;
 use Exception;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Laravel\Fortify\Http\Controllers\NewPasswordController;
 
 class ResetPasswordController extends Controller
@@ -80,12 +82,53 @@ class ResetPasswordController extends Controller
     public function reset(ResetPasswordRequest $request)
     {
         try {
-            $response = (new NewPasswordController(Auth::guard()))->store($request);
+            if (Auth::user()) {
+                $input = $request->all();
+                (new UserRepository())->update(Auth::user()->id, ["password" => Hash::make($input["password"])]);
+                return $this->success(['message' => __('passwords.reset')]);
+            } else {
+                $response = (new NewPasswordController(Auth::guard()))->store($request);
 
-            if (isset($response->toResponse($request)->original)) {
-                return $this->success($response->toResponse($request)->original);
+                if (isset($response->toResponse($request)->original)) {
+                    return $this->success($response->toResponse($request)->original);
+                }
+                return $this->success($response->toResponse($request));
             }
-            return $this->success($response->toResponse($request));
+        } catch (Exception $e) {
+            return $this->error($e->getMessage(), 500);
+        }
+    }
+
+    /**
+     * @OA\Patch(
+     * path="/reset-password",
+     * summary="Reset your password",
+     * description="Send new password",
+     * operationId="change",
+     * tags={"Reset Password"},
+     * @OA\RequestBody(
+     *    required=true,
+     *    description="Send password to reset",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="password", type="string", format="password", example="password"),
+     *       @OA\Property(property="password_confirmation", type="string", format="password", example="password"),
+     *    ),
+     * ),
+     * @OA\Response(
+     *     response=200,
+     *     description="Success",
+     *     @OA\JsonContent(
+     *       @OA\Property(property="message", type="string", example="Your password has been reset!"),
+     *      ),
+     *    ),
+     * )
+     */
+    public function change(Request $request)
+    {
+        try {
+            $input = $request->all();
+            (new UserRepository())->update(Auth::user()->id, ["password" => Hash::make($input["password"])]);
+            return $this->success(['message' => __('passwords.reset')]);
         } catch (Exception $e) {
             return $this->error($e->getMessage(), 500);
         }
