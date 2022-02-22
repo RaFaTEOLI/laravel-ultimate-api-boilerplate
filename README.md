@@ -1,18 +1,6 @@
 # rafateoli/backend
 
-<!-- Initializer for Laravel Todos START  -->
 
-## TODO
-
-This project was generated using
-([Initializer for Laravel](https://laravel.initializer.dev)). To finish
-the project setup run the following in your terminal:
-
-```shell
-./initialize
-```
-
-<!-- Initializer for Laravel Todos END  -->
 
 ## Local Development
 

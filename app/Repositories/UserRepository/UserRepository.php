@@ -8,6 +8,7 @@ use App\Models\Role;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Collection;
+use Nette\Schema\Expect;
 
 class UserRepository implements UserRepositoryInterface
 {
@@ -64,9 +65,13 @@ class UserRepository implements UserRepositoryInterface
 
     public function delete($userId)
     {
-        $this->update($userId, ["deleted_at" => Carbon::now()]);
+        try {
+            $this->update($userId, ["deleted_at" => Carbon::now()]);
 
-        return true;
+            return true;
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage(), 500);
+        }
     }
 
     public function createType($type, $userId)

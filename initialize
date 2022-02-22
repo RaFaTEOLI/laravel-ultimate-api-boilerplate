@@ -69,12 +69,28 @@ echo './vendor/bin/sail up -d'
 ./vendor/bin/sail up -d;
 
 echo '';
-echo '┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━';
-echo '┃ 🚀 [1mMigrate the database[0m';
+echo -e '┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━';
+echo -e '┃ 🚀 [1mMigrate the database[0m';
 
-echo '┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━';echo '';
+echo -e '┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━';echo '';
+
+echo 'Waiting for database to accept connections...'
+attempt=1;
+maxAttempts=5;
+sleepTime=5;
+until ./vendor/bin/sail artisan tinker --execute 'try { DB::statement("select true"); echo("DB ready"); } catch (Throwable $e) { exit(1); }' | grep -q "DB ready" || [ $attempt -eq $maxAttempts ]; do
+    echo "Attempt $attempt failed, retrying in ${sleepTime}s...";
+    ((attempt=attempt+1));
+    sleep $sleepTime;
+done
+
+if [ "$attempt" -eq "$maxAttempts" ]; then
+    echo "Could not connect to database after $attempt attempts! Aborting...";
+fi
+
+echo "Database ready!"
 echo './vendor/bin/sail artisan migrate'
-./vendor/bin/sail artisan migrate;
+./vendor/bin/sail artisan migrate
 
 echo '';
 echo '┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━';
